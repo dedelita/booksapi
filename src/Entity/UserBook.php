@@ -11,6 +11,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *      normalizationContext={"groups"={"userbook:read"}},
  *      denormalizationContext={"groups"={"userbook:write"}},
+ *      collectionOperations={
+ *         "get",
+ *         "post"={"security"="object.user == user"}
+*       },
+*       itemOperations={
+*         "get",
+*         "put"={"security"="object.user == user"},
+*         "delete"={"security"="is_granted('ROLE_ADMIN') or object.user == user"}
+*       }
  * )
  * @ORM\Entity(repositoryClass=UserBookRepository::class)
  */

@@ -4,24 +4,20 @@ namespace App\DataPersister;
 use App\Entity\UserBook;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
+use Psr\Log\LoggerInterface;
 
 class UserBookDataPersister implements ContextAwareDataPersisterInterface
 {
     private $entityManager;
-    private $request;
     private $security;
+    private $logger;
 
-    public function __construct(
-        EntityManagerInterface $entityManager, 
-        RequestStack $request,
-        Security $security
-    )
+    public function __construct(EntityManagerInterface $entityManager, Security $security, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
-        $this->request = $request->getCurrentRequest();
         $this->security = $security;
+        $this->logger = $logger;
     }
 
     /**
@@ -29,21 +25,20 @@ class UserBookDataPersister implements ContextAwareDataPersisterInterface
      */
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof User;
+        return $data instanceof UserBook;
     }
     
     /**
-     * @param User $data
+     * @param UserBook $data
      */
     public function persist($data, array $context = [])
     {
-        if ($this->request->getMethod() === 'POST') {
+        if ($context['collection_operation_name'] == 'post') {
             $data->setUser($this->security->getUser());
         }
 
         $this->entityManager->persist($data);
         $this->entityManager->flush();
-        return $data;
     }
     public function remove($data, array $context = [])
     {
