@@ -5,19 +5,16 @@ use App\Entity\UserBook;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
-use Psr\Log\LoggerInterface;
 
 class UserBookDataPersister implements ContextAwareDataPersisterInterface
 {
     private $entityManager;
     private $security;
-    private $logger;
 
-    public function __construct(EntityManagerInterface $entityManager, Security $security, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $entityManager, Security $security)
     {
         $this->entityManager = $entityManager;
         $this->security = $security;
-        $this->logger = $logger;
     }
 
     /**
