@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 
-class UserDataPersister implements ContextAwareDataPersisterInterface
+class UserBookDataPersister implements ContextAwareDataPersisterInterface
 {
     private $entityManager;
     private $request;
