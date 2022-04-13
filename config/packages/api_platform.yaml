@@ -1,0 +1,12 @@
+api_platform:
+    title: 'Symfony API Platform REST API - BooksProject'
+    description: 'A Symfony API to recreate your library'
+    version: '1.0.0'
+    defaults:
+        pagination_items_per_page: 20
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    patch_formats:
+        json: ['application/merge-patch+json']
+    swagger:
+        versions: [3]
