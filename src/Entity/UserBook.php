@@ -12,11 +12,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      normalizationContext={"groups"={"userbook:read"}},
  *      denormalizationContext={"groups"={"userbook:write"}},
  *      collectionOperations={
- *         "get",
+ *         "get"={"security"="object.user == user"},
  *         "post"={"security"="object.user == user"}
 *       },
 *       itemOperations={
-*         "get",
+*         "get"={"security"="object.user == user"},
 *         "put"={"security"="object.user == user"},
 *         "delete"={"security"="is_granted('ROLE_ADMIN') or object.user == user"}
 *       }

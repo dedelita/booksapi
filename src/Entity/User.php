@@ -4,6 +4,7 @@ namespace App\Entity;
 
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -87,6 +88,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=UserBook::class, mappedBy="user", orphanRemoval=true)
+     * 
      * @Groups("user:read")
      */
     private $books;

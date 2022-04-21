@@ -2,18 +2,43 @@
 
 namespace App\Entity;
 
+use App\Controller\GoogleBooksController;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *      collectionOperations={
+ *          "custom_gbapi_isbn"={
+ *              "controller"=GoogleBooksController::class,
+ *              "method"="GET",
+ *              "path"="/gbooks",
+ *              "defaults"={"_api_receive"=false},
+ *              "swagger_context"={
+ *                  "parameters"={}
+ *              }
+ *         }
+ *      },
+ *      itemOperations={
+ *          "get",
+ *          
+ *      }
+ * )
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={"isbn":"exact", "author":"partial", "title":"partial", "language":"exact"}
+ * )
  * @ORM\Entity(repositoryClass=BookRepository::class)
  */
 class Book
 {
     /**
+     * @ApiProperty(identifier=false)
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -22,34 +47,38 @@ class Book
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("user:read")
+     * @Groups({"book:read", "user:read", "userbook:read"})
      */
     private $author;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("user:read")
+     * @Groups({"book:read", "user:read", "userbook:read"})
      */
     private $title;
 
     /**
-     * @ORM\Column(type="string", length=13)
-     * @Groups("user:read")
+     * @ApiProperty(identifier=true)
+     * @ORM\Column(type="string", length=13, unique=true)
+     * @Groups({"book:read", "user:read", "userbook:read"})
      */
     private $isbn;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"book:read", "userbook:read"})
      */
     private $image;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"book:read", "userbook:read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=2, nullable=true)
+     * @Groups({"book:read", "userbook:read"})
      */
     private $language;
 
