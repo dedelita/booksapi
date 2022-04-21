@@ -7,7 +7,16 @@ use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *      collectionOperations={
+ *         "post"={"security"="is_granted('ROLE_USER')"}
+*       },
+*       itemOperations={
+*         "get"={"security"="is_granted('ROLE_USER') and object.userBook.user == user"},
+*         "put"={"security"="is_granted('ROLE_USER') and object.userBook.user == user"},
+*         "delete"={"security"="is_granted('ROLE_ADMIN') and object.userBook.user == user"}
+*       }
+ * )
  * @ORM\Entity(repositoryClass=CommentRepository::class)
  */
 class Comment
@@ -35,10 +44,14 @@ class Comment
     private $createdDate;
 
     /**
-     * @ORM\OneToOne(targetEntity=UserBook::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity=UserBook::class, mappedBy="comment", cascade={"persist", "remove"})
      */
     private $userBook;
+
+    public function __construct()
+    {
+        $this->createdDate = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -86,8 +99,18 @@ class Comment
         return $this->userBook;
     }
 
-    public function setUserBook(UserBook $userBook): self
+    public function setUserBook(?UserBook $userBook): self
     {
+        // unset the owning side of the relation if necessary
+        if ($userBook === null && $this->userBook !== null) {
+            $this->userBook->setComment(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($userBook !== null && $userBook->getComment() !== $this) {
+            $userBook->setComment($this);
+        }
+
         $this->userBook = $userBook;
 
         return $this;

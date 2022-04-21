@@ -13,6 +13,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *      normalizationContext={"groups"={"book:read"}},
+ *      denormalizationContext={"groups"={"book:write"}},
  *      collectionOperations={
  *          "custom_gbapi_isbn"={
  *              "controller"=GoogleBooksController::class,
@@ -21,11 +23,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "defaults"={"_api_receive"=false},
  *              "swagger_context"={
  *                  "parameters"={}
- *              }
+ *              },
+ *          "post"={"security"="is_granted('ROLE_USER')"}
  *         }
  *      },
  *      itemOperations={
- *          "get",
+ *          "get"={"security"="is_granted('ROLE_USER')"},
  *          
  *      }
  * )
@@ -47,38 +50,38 @@ class Book
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"book:read", "user:read", "userbook:read"})
+     * @Groups({"book:read", "book:write", "user:read", "userbook:read"})
      */
     private $author;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"book:read", "user:read", "userbook:read"})
+     * @Groups({"book:read", "book:write", "user:read", "userbook:read"})
      */
     private $title;
 
     /**
      * @ApiProperty(identifier=true)
      * @ORM\Column(type="string", length=13, unique=true)
-     * @Groups({"book:read", "user:read", "userbook:read"})
+     * @Groups({"book:read", "book:write", "user:read", "userbook:read"})
      */
     private $isbn;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"book:read", "userbook:read"})
+     * @Groups({"book:read", "book:write", "userbook:read"})
      */
     private $image;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"book:read", "userbook:read"})
+     * @Groups({"book:read", "book:write", "userbook:read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=2, nullable=true)
-     * @Groups({"book:read", "userbook:read"})
+     * @Groups({"book:read", "book:write", "userbook:read"})
      */
     private $language;
 

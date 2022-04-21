@@ -17,7 +17,16 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 /**
  * @ApiResource(
  *      normalizationContext={"groups"={"user:read"}},
- *      denormalizationContext={"groups"={"user:write"}}
+ *      denormalizationContext={"groups"={"user:write"}},
+ *      collectionOperations={
+ *          "get"={"security"="is_granted('ROLE_ADMIN')"},
+ *          "post"={"security"="is_granted('ROLE_USER')"}
+ *      },
+ *      itemOperations={
+*         "get"={"security"="is_granted('ROLE_USER') and object.getUser() == user"},
+*         "put"={"security"="is_granted('ROLE_USER') and object.getUser() == user"},
+*         "delete"={"security"="is_granted('ROLE_ADMIN') or object.getUser() == user"}
+*       }
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */

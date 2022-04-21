@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\UserBookRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -12,14 +15,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      normalizationContext={"groups"={"userbook:read"}},
  *      denormalizationContext={"groups"={"userbook:write"}},
  *      collectionOperations={
- *         "get"={"security"="object.user == user"},
- *         "post"={"security"="object.user == user"}
+ *         "get"={"security"="is_granted('ROLE_USER')"},
+ *         "post"={"security"="is_granted('ROLE_USER')"}
 *       },
 *       itemOperations={
-*         "get"={"security"="object.user == user"},
-*         "put"={"security"="object.user == user"},
-*         "delete"={"security"="is_granted('ROLE_ADMIN') or object.user == user"}
+*         "get"={"security"="is_granted('ROLE_USER') and object.getUser() == user"},
+*         "put"={"security"="is_granted('ROLE_USER') and object.getUser() == user"},
+*         "delete"={"security"="is_granted('ROLE_ADMIN') or object.getUser() == user"}
 *       }
+ * )
+ *  * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={"user":"exact"}
  * )
  * @ORM\Entity(repositoryClass=UserBookRepository::class)
  */
@@ -56,6 +63,12 @@ class UserBook
      * @Groups("userbook:read")
      */
     private $isDeleted;
+
+    /**
+     * @ApiSubresource
+     * @ORM\OneToOne(targetEntity=Comment::class, inversedBy="userBook", cascade={"persist", "remove"})
+     */
+    private $comment;
 
     public function __construct()
     {
@@ -112,6 +125,18 @@ class UserBook
     public function setIsDeleted(bool $isDeleted): self
     {
         $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    public function getComment(): ?Comment
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?Comment $comment): self
+    {
+        $this->comment = $comment;
 
         return $this;
     }
