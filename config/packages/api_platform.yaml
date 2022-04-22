@@ -2,6 +2,7 @@ api_platform:
     title: 'Symfony API Platform REST API - BooksProject'
     description: 'A Symfony API to recreate your library'
     version: '1.0.0'
+    show_webby: false
     defaults:
         pagination_items_per_page: 20
     mapping:

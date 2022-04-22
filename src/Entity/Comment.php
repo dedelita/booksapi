@@ -9,13 +9,15 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ApiResource(
  *      collectionOperations={
+ *         "get"={"security"="is_granted('ROLE_USER')"},
  *         "post"={"security"="is_granted('ROLE_USER')"}
 *       },
 *       itemOperations={
-*         "get"={"security"="is_granted('ROLE_USER') and object.userBook.user == user"},
-*         "put"={"security"="is_granted('ROLE_USER') and object.userBook.user == user"},
-*         "delete"={"security"="is_granted('ROLE_ADMIN') and object.userBook.user == user"}
-*       }
+*         "get"={"security"="is_granted('ROLE_USER') and object.getUserBook().getUser() == user"},
+*         "put"={"security"="is_granted('ROLE_USER') and object.getUserBook().getUser() == user"},
+*         "delete"={"security"="is_granted('ROLE_ADMIN') or object.getUserBook().getUser() == user"}
+*       },
+*       paginationEnabled=false
  * )
  * @ORM\Entity(repositoryClass=CommentRepository::class)
  */

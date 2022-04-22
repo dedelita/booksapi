@@ -4,8 +4,6 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\UserBookRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -23,10 +21,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 *         "put"={"security"="is_granted('ROLE_USER') and object.getUser() == user"},
 *         "delete"={"security"="is_granted('ROLE_ADMIN') or object.getUser() == user"}
 *       }
- * )
- *  * @ApiFilter(
- *      SearchFilter::class,
- *      properties={"user":"exact"}
  * )
  * @ORM\Entity(repositoryClass=UserBookRepository::class)
  */
