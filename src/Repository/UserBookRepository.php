@@ -45,7 +45,7 @@ class UserBookRepository extends ServiceEntityRepository
         }
     }
 
-    public function findByUserIsbnBook($user, $isbn)
+    public function findOneByUserIsbnBook($user, $isbn)
     {
         return $this->createQueryBuilder('ub')
             ->join('ub.book', 'b')
@@ -53,7 +53,7 @@ class UserBookRepository extends ServiceEntityRepository
             ->andWhere('ub.user = :user AND b.isbn = :isbn')
             ->setParameters(["user" => $user, "isbn" => $isbn])
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
     // /**
     //  * @return UserBook[] Returns an array of UserBook objects

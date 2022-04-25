@@ -36,9 +36,9 @@ class UserBookDataPersister implements ContextAwareDataPersisterInterface
         if ($context['collection_operation_name'] == 'post') {
             $user = $this->security->getUser();
             $data->setUser($user);
-            $ub = $this->userBookRepository->findByUserIsbnBook($user, $data->getBook()->getIsbn());
-            if (!empty($ub)) {
-                return $ub[0];
+            $ub = $this->userBookRepository->findOneByUserIsbnBook($user, $data->getBook()->getIsbn());
+            if ($ub) {
+                return $ub;
             }
         }
 
