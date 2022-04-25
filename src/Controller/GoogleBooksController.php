@@ -52,8 +52,8 @@ class GoogleBooksController extends AbstractController
                 
                 $result = $this->getGBooksInfo($rgb[0]);
             }
-        } elseif (!empty($title)) { //&& !empty($author) || !empty($title)) {
-            if (!empty($author)) {
+        } elseif (!empty($title) || !empty($author)) {
+            if (!empty($title) && !empty($author)) {
                 $book = $bookRepository->findBy(["author" => $author, "title" => $title]);
             } else {
                 $book = $bookRepository->findByTitle($title);
@@ -112,28 +112,29 @@ class GoogleBooksController extends AbstractController
             $results = $this->getResultsGB($q, 40, $startIndex, $lang);
             $rgb = $results->getItems();
             foreach ($rgb as $item) {
-                if($this->checkBook($item, $author, $title) && $item['volumeInfo']['language'] == $lang)
+                if ($this->checkBook($item, $author, $title) && $item['volumeInfo']['language'] == $lang) {
                     $books[] = $this->getGBooksInfo($item);
+                }
             }
         }
         return $books;
     }
 
     private function checkBook($item, $author, $title) {
-        return $item['volumeInfo']['imageLinks'] && $item['volumeInfo']['authors'] && 
-        ((
-            !empty($author) &&
-            in_array(strtolower($author), array_map("strtolower", $item['volumeInfo']['authors']))
-        ) || 
-        (
-            !empty($author) &&
-            preg_grep(
-                '/[*]*?' . strtolower($author) . '[*]*?/', 
-                array_map("strtolower", $item['volumeInfo']['authors'])
-            )
-        ) ||
-        (empty($author))) &&
-        (str_contains(mb_strtolower($item['volumeInfo']['title']), mb_strtolower($title)) ||
+        return $item['volumeInfo']['imageLinks'] && $item['volumeInfo']['authors'] &&
+            ((
+                !empty($author) &&
+                in_array(strtolower($author), array_map("strtolower", $item['volumeInfo']['authors']))
+            ) || 
+            (
+                !empty($author) &&
+                preg_grep(
+                    '/[*]*?' . strtolower($author) . '[*]*?/', 
+                    array_map("strtolower", $item['volumeInfo']['authors'])
+                )
+            ) ||
+            (empty($author))) &&
+            (str_contains(mb_strtolower($item['volumeInfo']['title']), mb_strtolower($title)) ||
             str_contains(mb_strtolower($item['volumeInfo']['subtitle']), mb_strtolower($title)));
     }
 
@@ -180,6 +181,8 @@ class GoogleBooksController extends AbstractController
             $book->setLanguage($gbook['volumeInfo']['language']);
         }
 
-        return $book;
+        if ($book->getIsbn() != null) {
+            return $book;
+        }
     }
 }

@@ -40,7 +40,7 @@ class UserBook
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Book::class)
+     * @ORM\ManyToOne(targetEntity=Book::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"userbook:write", "user:read"})
      */

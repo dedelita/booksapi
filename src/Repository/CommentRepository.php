@@ -7,6 +7,7 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -44,17 +45,6 @@ class CommentRepository extends ServiceEntityRepository
         if ($flush) {
             $this->_em->flush();
         }
-    }
-
-    public function findByUser(User $user)
-    {
-        return $this->createQueryBuilder('c')
-            ->join('c.userBook','ub')
-            ->addSelect('ub')
-            ->where('ub.user = :user')
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getResult();
     }
 
     // /**

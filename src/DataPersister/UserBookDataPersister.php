@@ -3,6 +3,7 @@ namespace App\DataPersister;
 
 use App\Entity\UserBook;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use App\Repository\UserBookRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -10,11 +11,13 @@ class UserBookDataPersister implements ContextAwareDataPersisterInterface
 {
     private $entityManager;
     private $security;
+    private $userBookRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, Security $security)
+    public function __construct(EntityManagerInterface $entityManager, Security $security, UserBookRepository $userBookRepository)
     {
         $this->entityManager = $entityManager;
         $this->security = $security;
+        $this->userBookRepository = $userBookRepository;
     }
 
     /**
@@ -31,7 +34,12 @@ class UserBookDataPersister implements ContextAwareDataPersisterInterface
     public function persist($data, array $context = [])
     {
         if ($context['collection_operation_name'] == 'post') {
-            $data->setUser($this->security->getUser());
+            $user = $this->security->getUser();
+            $data->setUser($user);
+            $ub = $this->userBookRepository->findByUserIsbnBook($user, $data->getBook()->getIsbn());
+            if (!empty($ub)) {
+                return $ub[0];
+            }
         }
 
         $this->entityManager->persist($data);

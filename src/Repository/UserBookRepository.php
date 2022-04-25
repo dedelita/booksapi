@@ -45,6 +45,16 @@ class UserBookRepository extends ServiceEntityRepository
         }
     }
 
+    public function findByUserIsbnBook($user, $isbn)
+    {
+        return $this->createQueryBuilder('ub')
+            ->join('ub.book', 'b')
+            ->addSelect('b')
+            ->andWhere('ub.user = :user AND b.isbn = :isbn')
+            ->setParameters(["user" => $user, "isbn" => $isbn])
+            ->getQuery()
+            ->getResult();
+    }
     // /**
     //  * @return UserBook[] Returns an array of UserBook objects
     //  */

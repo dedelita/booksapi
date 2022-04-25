@@ -50,38 +50,38 @@ class Book
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"book:read", "book:write", "user:read", "userbook:read"})
+     * @Groups({"book:read", "book:write", "user:read", "userbook:read", "userbook:write"})
      */
     private $author;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"book:read", "book:write", "user:read", "userbook:read"})
+     * @Groups({"book:read", "book:write", "user:read", "userbook:read", "userbook:write"})
      */
     private $title;
 
     /**
      * @ApiProperty(identifier=true)
      * @ORM\Column(type="string", length=13, unique=true)
-     * @Groups({"book:read", "book:write", "user:read", "userbook:read"})
+     * @Groups({"book:read", "book:write", "user:read", "userbook:read", "userbook:write"})
      */
     private $isbn;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"book:read", "book:write", "userbook:read"})
+     * @Groups({"book:read", "book:write", "userbook:read", "userbook:write"})
      */
     private $image;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"book:read", "book:write", "userbook:read"})
+     * @Groups({"book:read", "book:write", "userbook:read", "userbook:write"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=2, nullable=true)
-     * @Groups({"book:read", "book:write", "userbook:read"})
+     * @Groups({"book:read", "book:write", "userbook:read", "userbook:write"})
      */
     private $language;
 

@@ -19,13 +19,16 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
  *      denormalizationContext={"groups"={"user:write"}},
  *      collectionOperations={
  *          "get"={"security"="is_granted('ROLE_ADMIN')"},
- *          "post"={"security"="is_granted('ROLE_USER')"}
+ *          "post"
  *      },
  *      itemOperations={
-*         "get"={"security"="is_granted('ROLE_USER') and object.getUser() == user"},
-*         "put"={"security"="is_granted('ROLE_USER') and object.getUser() == user"},
-*         "delete"={"security"="is_granted('ROLE_ADMIN') or object.getUser() == user"}
-*       }
+ *          "get"={
+ *              "security"="is_granted('ROLE_USER') and object.getUser() == user",
+ *              "path"="/profile"
+ *          },
+ *          "put"={"security"="is_granted('ROLE_USER') and object.getUser() == user"},
+ *          "delete"={"security"="is_granted('ROLE_ADMIN') or object.getUser() == user"}
+ *      }
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
