@@ -25,7 +25,7 @@ security:
             pattern: ^/api/login
             stateless: true
             json_login:
-                check_path: /api/login
+                check_path: authentication_token
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -40,7 +40,9 @@ security:
                     - lexik_jwt_authentication.jwt_token_authenticator
             jwt: ~
             refresh_jwt:
-                check_path: /api/token/refresh
+                check_path: api_refresh_token
+            logout:
+                path: api_token_invalidate
         main:
             lazy: true
             provider: app_user_provider
