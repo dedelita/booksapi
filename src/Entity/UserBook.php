@@ -42,7 +42,7 @@ class UserBook
     /**
      * @ORM\ManyToOne(targetEntity=Book::class, cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"userbook:write", "user:read"})
+     * @Groups({"userbook:write", "userbook:read", "user:read"})
      */
     private $book;
 
@@ -61,6 +61,7 @@ class UserBook
     /**
      * @ApiSubresource
      * @ORM\OneToOne(targetEntity=Comment::class, inversedBy="userBook", cascade={"persist", "remove"})
+     * @Groups("userbook:read")
      */
     private $comment;
 

@@ -33,10 +33,14 @@ security:
         api:
             pattern: ^/api/
             stateless: true
+            entry_point: jwt
             provider: app_user_provider
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
+            jwt: ~
+            refresh_jwt:
+                check_path: /api/token/refresh
         main:
             lazy: true
             provider: app_user_provider

@@ -45,6 +45,7 @@ class Book
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"book:read"})
      */
     private $id;
 
@@ -75,7 +76,7 @@ class Book
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"book:read", "book:write", "userbook:read", "userbook:write"})
+     * @Groups({"book:read", "book:write", "userbook:write"})
      */
     private $description;
 

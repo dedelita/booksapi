@@ -36,13 +36,13 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface
             return;
         }
 
-        $rootAlias = $queryBuilder->getRootAliases()[0];
+        $entity = $queryBuilder->getRootAliases()[0];
         if ($resourceClass === Comment::class) {
-            $queryBuilder->join(sprintf('%s.userBook', $rootAlias), 'ub')
+            $queryBuilder->join("{$entity}.userBook", 'ub')
                 ->addSelect('ub')
                 ->andWhere('ub.user = :current_user');
         } else {
-            $queryBuilder->andWhere(sprintf('%s.user = :current_user', $rootAlias));
+            $queryBuilder->andWhere("{$entity}.user = :current_user");
         }
         /** @var User $user */
         $queryBuilder->setParameter('current_user', $user);
