@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
-class GoogleBooksController extends AbstractController
+class GetGoogleBooks extends AbstractController
 {
     private $googleClient;
     private $gbService;
@@ -80,24 +80,23 @@ class GoogleBooksController extends AbstractController
         if (!empty($author))
             $q.= "+inauthor:\"" . str_replace(' ', '+', $author) . "\"";
         $results = $this->getResultsGB($q, 40, $startIndex, $lang);
-        
         $rgb = $results->getItems();
         
         if ($results['totalItems'] > 40) {
             $iteratorNb = intdiv($results['totalItems'], 40);
-            for ($i=0; $i < $iteratorNb; $i++) { 
+            for ($i=0; $i < $iteratorNb; $i++) {
                 $startIndex += 39;
                 $results = $this->getResultsGB($q, 40, $startIndex, $lang);
                 $rgb = array_merge($rgb, $results->getItems());
             }
         }
+        
         $books = [];
         foreach ($rgb as $item) {
             if($this->checkBook($item, $author, $title) && $item['volumeInfo']['language'] == $lang) {
                 $books[] = $this->getGBooksInfo($item);
             }
         }
-        
         if (!$books) {
             foreach ($rgb as $item) {
                 if ($this->checkBook($item, $author, $title)) {
@@ -117,7 +116,7 @@ class GoogleBooksController extends AbstractController
                 }
             }
         }
-        return $books;
+        return array_unique($books, SORT_REGULAR);
     }
 
     private function checkBook($item, $author, $title) {

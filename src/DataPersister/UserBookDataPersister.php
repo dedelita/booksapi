@@ -3,6 +3,7 @@ namespace App\DataPersister;
 
 use App\Entity\UserBook;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use App\Repository\BookRepository;
 use App\Repository\UserBookRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -12,12 +13,19 @@ class UserBookDataPersister implements ContextAwareDataPersisterInterface
     private $entityManager;
     private $security;
     private $userBookRepository;
+    private $bookRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, Security $security, UserBookRepository $userBookRepository)
+    public function __construct(
+        EntityManagerInterface $entityManager, 
+        Security $security, 
+        UserBookRepository $userBookRepository,
+        BookRepository $bookRepository
+    )
     {
         $this->entityManager = $entityManager;
         $this->security = $security;
         $this->userBookRepository = $userBookRepository;
+        $this->bookRepository = $bookRepository;
     }
 
     /**
@@ -36,9 +44,16 @@ class UserBookDataPersister implements ContextAwareDataPersisterInterface
         if ($context['collection_operation_name'] == 'post') {
             $user = $this->security->getUser();
             $data->setUser($user);
-            $ub = $this->userBookRepository->findOneByUserIsbnBook($user, $data->getBook()->getIsbn());
+
+            $isbn = $data->getBook()->getIsbn();
+            $ub = $this->userBookRepository->findOneByUserIsbnBook($user, $isbn);
             if ($ub) {
                 return $ub;
+            }
+
+            $book = $this->bookRepository->findOneByIsbn($isbn);
+            if ($book) {
+                $data->setBook($book);
             }
         }
 

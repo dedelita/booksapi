@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Controller\GoogleBooksController;
+use App\Controller\GetGoogleBooks;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      denormalizationContext={"groups"={"book:write"}},
  *      collectionOperations={
  *          "custom_gbapi_isbn"={
- *              "controller"=GoogleBooksController::class,
+ *              "controller"=GetGoogleBooks::class,
  *              "method"="GET",
  *              "path"="/gbooks",
  *              "defaults"={"_api_receive"=false},
@@ -28,8 +28,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *         }
  *      },
  *      itemOperations={
- *          "get"={"security"="is_granted('ROLE_USER')"},
- *          
+ *          "get"={"security"="is_granted('ROLE_USER')"}
  *      }
  * )
  * @ApiFilter(
@@ -51,26 +50,26 @@ class Book
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"book:read", "book:write", "user:read", "userbook:read", "userbook:write"})
+     * @Groups({"book:read", "book:write", "user:read", "userbook:read", "userbook:write", "comment:read"})
      */
     private $author;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"book:read", "book:write", "user:read", "userbook:read", "userbook:write"})
+     * @Groups({"book:read", "book:write", "user:read", "userbook:read", "userbook:write", "comment:read"})
      */
     private $title;
 
     /**
      * @ApiProperty(identifier=true)
      * @ORM\Column(type="string", length=13, unique=true)
-     * @Groups({"book:read", "book:write", "user:read", "userbook:read", "userbook:write"})
+     * @Groups({"book:read", "book:write", "user:read", "userbook:read", "userbook:write", "comment:read"})
      */
     private $isbn;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"book:read", "book:write", "userbook:read", "userbook:write"})
+     * @Groups({"book:read", "book:write", "userbook:read", "userbook:write", "comment:read"})
      */
     private $image;
 

@@ -5,11 +5,14 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *      normalizationContext={"groups"={"comment:read"}},
+ *      denormalizationContext={"groups"={"comment:write"}},
  *      collectionOperations={
- *         "get"={"security"="is_granted('ROLE_USER')"},
+ *         "get"={"security"="is_granted('ROLE_USER')", "openapi_context"={"summary"="Récupérer les comments de l'user"}},
  *         "post"={"security"="is_granted('ROLE_USER')"}
 *       },
 *       itemOperations={
@@ -26,26 +29,31 @@ class Comment
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"comment:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"comment:write", "comment:read"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"comment:write", "comment:read"})
      */
     private $stars;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"comment:read"})
      */
     private $createdDate;
 
     /**
      * @ORM\OneToOne(targetEntity=UserBook::class, mappedBy="comment", cascade={"persist", "remove"})
+     * @Groups({"comment:write"}, "comment:read")
      */
     private $userBook;
 
